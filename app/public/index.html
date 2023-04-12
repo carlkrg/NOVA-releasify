@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+  <!-- reference local files -->
+  <link rel="icon" type="image/x-icon" href="/images/Spotify_icon.png">
+  <link href="css/style.css" rel="stylesheet">
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+
+  <title>Releasify</title>
+</head>
+
+<body id="page-top">
+  <div id="loading-screen">
+    <div class="spinner-border text-light" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div id="alert-placeholder">
+
+  </div>
+
+
+  <!-- Nav Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg" id="mainNav">
+    <div class="container px-4">
+      <img src="images/Spotify_icon.png" width="40" height="40" class="rounded-circle">
+      <a class="navbar-brand ms-3" href="#page-top">Releasify</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span
+          class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ms-auto">
+          <div id="navLogin">
+            <div class="dropdown">
+              <button type="button" class="btn btn-light dropdown-toggle"
+                style="background-color:transparent; border:none;" data-bs-toggle="dropdown">
+                <span class="rounded-circle bg-secondary d-inline-flex justify-content-center align-items-center"
+                  style="width: 40px; height: 40px;">
+                  <i class="bi bi-person text-white"></i>
+                </span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/login">Log in</a></li>
+                <li><a class="dropdown-item"
+                    href="https://www.spotify.com/us/signup?forward_url=https%3A%2F%2Fopen.spotify.com%2F%3F">Sign
+                    up</a></li>
+              </ul>
+            </div>
+          </div>
+          <div id="navLoggedin">
+            <div id="user-profile-image">
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Main Content -->
+  <div class="container mt-10 shadow-lg content align-middle">
+    <!-- shown when user is not logged in -->
+    <div id="login">
+      <div class="container-fluid align-middle">
+        <div class="row">
+          <div class="col-lg-12 align-items-center justify-content-center align-middle">
+            <div class="text-center align-middle">
+              <img src="images/Spotify_icon.png" alt="Spotify Logo" class="mb-4" style="max-height: 100px;">
+              <h1 class="mb-3">Welcome to Releasify</h1>
+              <p>Please log in to access the newest releases</p>
+              <a href="/login" class="btn btn-lg btn-primary mt-3">Log in with Spotify</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- shown when user is logged in -->
+    <div id="loggedin">
+      <div class="d-flex justify-content-center align-items-center mb-3">
+        <h1>Most popular album releases for <span class="badge bg-success shadow" id='countryHeader'></span></h1>
+      </div>
+      <div class="d-flex justify-content-center align-items-center mb-3">
+        <div class="dropdown me-3">
+          <button class="btn btn-secondary dropdown-toggle shadow" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-globe2 me-2"></i> Country
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-width shadow" id="countries-dropdown"
+            aria-labelledby="dropdownMenuButton1">
+            <form class="px-4 py-3">
+              <div class="input-group">
+                <input type="text" class="form-control" id="searchCountryDropdown" placeholder="Search...">
+                <span class="input-group-text" id="basic-addon1">
+                  <i class="bi bi-search"></i>
+                </span>
+              </div>
+            </form>
+            <!-- placeholder -->
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle shadow" type="button" id="dropdownMenuButton2"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-sort-alpha-down me-2"></i> Sort by
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow" id="sort-dropdown" aria-labelledby="dropdownMenuButton2">
+            <li>
+              <a class="dropdown-item" id="sort-release-date-newfirst"><i class="bi bi-calendar2-date-fill me-2"></i>
+                Release Date: New to Old</a>
+            </li>
+            <li>
+              <a class="dropdown-item" id="sort-release-date-oldfirst"><i class="bi bi-calendar2-date-fill me-2"></i>
+                Release Date: Old to New</a>
+            </li>
+            <li>
+              <a class="dropdown-item" id="sort-popularity-largefirst"><i class="bi bi-graph-down me-2"></i> Sort on
+                Artist's Popularity: High to Low</a>
+            </li>
+            <li>
+              <a class="dropdown-item" id="sort-popularity-smallfirst"><i class="bi bi-graph-up me-2"></i> Sort on
+                Artist's Popularity: Low to High</a>
+            </li>
+            <li>
+              <a class="dropdown-item" id="sort-total-tracks-largefirst"><i class="bi bi-music-note-list me-2"></i> Sort
+                on Total Tracks: High to Low</a>
+            </li>
+            <li>
+              <a class="dropdown-item" id="sort-total-tracks-smallfirst"><i class="bi bi-music-note-list me-2"></i> Sort
+                on Total Tracks: Low to High</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div id="albumslist" class="card-group justify-content-center mt-3 mb-10">
+
+      </div>
+    </div>
+  </div>
+
+  <!-- User Modal  -->
+  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="user-profile">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="songListModal" tabindex="-1" aria-labelledby="songListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="btn-close mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div id="artistFull"></div>
+          <div id="albumFull"></div>
+          <ul id="songList" class="list-group">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Oauth Modal  -->
+  <div class="modal fade" id="oauthModal" tabindex="-1" aria-labelledby="oauthModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="oauth">
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-primary" id="obtain-new-token">New token</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Player -->
+  <footer id="footerLoggedin" class="footer fixed-bottom bg-dark text-light shadow-lg">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2 d-flex align-items-center">
+          <img src="https://dummyimage.com/64x64/000/fff" class="me-3" alt="Album cover" id="album-cover" width="64"
+            height="64">
+          <div>
+            <p class="m-0 text-overflow" id="song-title"></p>
+            <p class="m-0 text-overflow" id="artist-name"></p>
+          </div>
+        </div>
+        <div class="col-md-8 d-flex align-items-center justify-content-center">
+          <div class="progress w-75 me-3">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 60%;" aria-valuenow="0"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <button type="button" class="btn btn-outline-light btn-round mx-3" id="previous-button">
+            <i class="bi bi-skip-start-fill"></i>
+          </button>
+          <button type="button" class="btn btn-outline-light btn-round mx-3 play-pause-button">
+            <i class="bi bi-play-fill"></i>
+          </button>
+          <button type="button" class="btn btn-outline-light btn-round mx-3" id="next-button">
+            <i class="bi bi-skip-end-fill"></i>
+          </button>
+        </div>
+        <div class="col-md-2 d-flex align-items-center justify-content-end">
+          <p class="m-0" id="current-time">0:00</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Templates -->
+  <script id="user-profile-image-template" type="text/x-handlebars-template">
+        <div class="dropdown">
+          <button type="button" class="btn btn-light dropdown-toggle" style="background-color:transparent; border:none;"  data-bs-toggle="dropdown">
+            <img src="{{images.0.url}}" width="40" height="40" class="rounded-circle">
+          </button>
+          <ul class="dropdown-menu">
+            <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#userModal">Profile</a></li>
+            <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#oauthModal">Token</a></li>
+            <li><a type="button" class="dropdown-item" id="logOutButton">Log out</a></li>
+          </ul>
+        </div>
+      </script>
+
+  <script id="user-profile-template" type="text/x-handlebars-template">
+        <div class="container d-flex justify-content-center">
+            <div class="image d-flex flex-column justify-content-center align-items-center">
+              <img class="rounded-circle shadow" width="150" src="{{images.0.url}}" />
+              <h2 class="mt-3 text-overflow-profile">{{display_name}}</h2>
+              <h4 class="mt-1 text-overflow-profile">{{email}}</h4>
+              <div class="d-flex flex-row justify-content-center align-items-center gap-2 mt-3">
+                <span class="idd1 text-overflow-profile">Spotify ID: {{id}}</span>
+              </div>
+              <div class="d-flex flex-row justify-content-center align-items-center mt-3">
+                <span class="number text-overflow-profile ">{{followers.total}} <span class="follow">Followers</span></span>
+              </div>
+              <div class="text mt-3">
+                <span class="text-overflow-profile">{{display_name}} is a Spotify {{product}} user from {{country}}.</span>
+              </div>
+              <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
+                <a class="btn btn-primary" href="{{external_urls.spotify}}">View on Spotify <i class="bi bi-spotify"></i></a>
+              </div>
+            </div>
+        </div>
+      </script>
+
+
+  <script id="oauth-template" type="text/x-handlebars-template">
+        <h2>oAuth info</h2>
+        <dl class="dl-horizontal">
+          <dt>Access token</dt><dd class="text-break"><samp>{{access_token}}</samp></dd>
+          <dt>Refresh token</dt><dd class="text-break"><samp>{{refresh_token}}</samp></dd>
+        </dl>
+      </script>
+
+  <script id="alert-template" type="text/x-handlebars-template">
+    <div class="notification-popup alert alert-dismissible align-items-center fade d-flex" role="alert" id="notification-popup">
+    <i class="bi bi-check"></i>
+    <div id="notification-message" class="notification-message">
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  </script>
+
+  <script id="album-template" type="text/x-handlebars-template">
+            <article class="album-info-article"
+            id={{id}}
+            data-album-name="{{name}}"
+            data-image-url="{{images.0.url}}"
+            data-popularity="{{artistPopularity}}"
+            data-total-tracks="{{total_tracks}}"
+            data-release-date="{{release_date}}"
+            data-artists="{{artistsList}}"
+            data-related-artist-1="{{related_artists.0.name}}"
+            data-related-artist-2="{{related_artists.1.name}}"
+            data-related-artist-3="{{related_artists.2.name}}"
+            data-external-url-spotify="{{external_urls.spotify}}"
+            data-uri="{{uri}}"
+            >
+          </article>
+          <div class="card mb-3 hover-effect getSongs shadow" style="max-width: 22rem;">
+            <img class="card-img-top" src="{{images.0.url}}" alt="Card image cap">
+            <div class="card-body">
+              <div class="container">
+                <div class="row gx-6 justify-content-center">
+                  <div class="col-md-12">
+                    <h5 class="card-title">{{name}}</h5>
+                  </div>
+                </div>
+                <div class="row gx-6 justify-content-center">
+                  <div class="col-md-12">
+                    <p class="card-text" id="artist-{{id}}"><dd>{{artistsList}}</dd></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </script>
+
+  <script id="artist-template-full" type="text/x-handlebars-template">
+        <article class="album-info-article"
+          id="{{id}}"
+          data-image-url="{{artistImage}}"
+          data-artists="{{artistsList}}"
+          data-related-artist-1="{{related_artists.0.name}}"
+          data-related-artist-2="{{related_artists.1.name}}"
+          data-related-artist-3="{{related_artists.2.name}}"
+          data-genres="{{genres}}"
+          data-external-url-spotify="{{external_urls.spotify}}"
+          data-followers="{{artistFollowers.total}}"
+          data-popularity="{{popularity}}"
+          data-uri="{{uri}}"
+        ></article>
+        <div class="container d-flex justify-content-start bg-dark mb-3 rounded text-white shadow">
+            <div class="d-flex artist-box justify-content-between w-100">
+                  <img src="{{artistImage}}" class="rounded h-100 p-3">
+              <div class="align-self-start p-3 stat-box w-75">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                  <div class="d-flex flex-row align-items-center">
+                    <h4 class="mb-0 mt-0">Artist: {{artistName}}</h4>
+                  </div>
+                </div>
+                <div class="p-2 mt-2 border border-primary d-flex justify-content-between rounded">
+                  <div class="d-flex flex-column">
+                    <span class="genres">Followers:</span>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <span class="number3 text-break">{{artistFollowers.total}}</span>
+                  </div>
+                </div>
+                <div class="p-2 mt-2 border border-primary d-flex justify-content-between rounded">
+                  <div class="row">
+                  <div class="d-flex flex-column">
+                    <span class="genres">Genres:</span>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <span class="number3 text-break">{{artistGenres}}</span>
+                  </div>
+                </div>
+                </div>
+                <div class="p-2 mt-2 border border-primary d-flex justify-content-between rounded">
+                  <div class="d-flex flex-column">
+                    <span class="genres">Popularity:</span>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <span class="number3">{{artistPopularity}}</span>
+                  </div>
+                </div>
+                <div class="button mt-2 d-flex flex-row justify-content-between">
+                  <a type="button" class="btn btn-primary" href="{{artistUrl}}">View Artist on Spotify <i class="bi bi-spotify"></i></a>
+                  <button id="Artist-Follow-{{artistID}}" type="button" class="btn btn-primary"><i class="bi bi-heart"></i></button>
+                </div>
+              </div>
+          </div>
+        </div>
+      </script>
+
+  <script id="album-template-full" type="text/x-handlebars-template">
+        <article class="album-info-article"
+          id="{{id}}"
+          data-album-name="{{name}}"
+          data-image-url="{{images.0.url}}"
+          data-total-tracks="{{total_tracks}}"
+          data-release-date="{{release_date}}"
+          data-artists="{{artistsList}}"
+          data-related-artist-1="{{related_artists.0.name}}"
+          data-related-artist-2="{{related_artists.1.name}}"
+          data-related-artist-3="{{related_artists.2.name}}"
+          data-external-url-spotify="{{external_urls.spotify}}"
+          data-uri="{{uri}}"
+        ></article>
+        <div class="container d-flex justify-content-start bg-light mb-3 rounded shadow">
+            <div class="d-flex artist-box justify-content-between w-100">
+                  <img src="{{images.0.url}}" class="rounded h-100 p-3">
+              <div class="align-self-start p-3 stat-box w-75">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                  <div class="d-flex flex-row align-items-center">
+                    <h4 class="mb-0 mt-0">Album: {{name}}</h4>
+                  </div>
+                </div>
+                <div class="p-2 mt-2 border border-primary d-flex justify-content-between rounded">
+                  <div class="d-flex flex-column">
+                    <span class="tracks">Total Tracks:</span>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <span class="number1">{{total_tracks}}</span>
+                  </div>
+                </div>
+                <div class="p-2 mt-2 border border-primary d-flex justify-content-between rounded">
+                  <div class="d-flex flex-column">
+                    <span class="release-date">Release Date:</span>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <span class="number2">{{release_date}}</span>
+                  </div>
+                </div>
+                <div class="button mt-2 d-flex flex-row align-items-center">
+                  <a type="button" class="btn btn-primary" href="{{external_urls.spotify}}">View Album on Spotify <i class="bi bi-spotify"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </script>
+
+
+  <script id="song-template" type="text/x-handlebars-template">
+        <div class="d-flex bg-light rounded mb-3 shadow" id={{id}}>
+            <div class="align-self-center px-3">{{track_number}}</div>
+            <div class="align-self-center p-3">
+                <img src={{albumImage}} width="64" height="64" alt={{name}}>
+            </div>
+            <div class="align-self-center px-3">
+                <h5 class="mb-0 text-overflow-song">{{name}}</h5>
+                <p class="mb-1 text-overflow-song">{{artists}}</p>
+            </div>
+            <div class="align-self-center ms-auto">
+                <button type="button" id="like-{{id}}" class="btn btn-primary me-3"><i class="bi bi-heart"></i></button>
+                <button type="button" id="play-{{id}}" class="btn btn-primary"><i class="bi bi-play-circle"></i></button>
+            </div>
+            <div class="align-self-center px-3">{{convertMsToMins duration_ms}}</div>
+        </div>
+    </script>
+
+
+
+
+  <!-- external js files -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <!-- reference to local script -->
+  <script type="text/javascript" src="js/script 2.js"></script>
+</body>
+
+</html>
