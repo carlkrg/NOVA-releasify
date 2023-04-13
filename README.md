@@ -1,4 +1,4 @@
-# Recommendify
+# Releasify
 
 ## Disclaimer: 
 
@@ -13,7 +13,7 @@ This project was developed as part of a university course at the Nova School of 
 
 
 
-Recommendify is a university project created at the Nova School of Business and Economics to learn about web and cloud technologies, as well as how to code with JavaScript. The website showcases the latest released albums from Spotify per country, and includes an in-built player to directly play the songs in the browser.
+Releasify is a university project created at the Nova School of Business and Economics to learn about web and cloud technologies, as well as how to code with JavaScript. The website showcases the latest released albums from Spotify per country, and includes an in-built player to directly play the songs in the browser.
 
 
 ---
